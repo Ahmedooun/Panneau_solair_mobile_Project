@@ -1,0 +1,1684 @@
+[
+    {
+        "id": "39309c3317489aa5",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a9c717e13a6701eb",
+        "type": "mqtt in",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "giraux/light_sensor",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5ba725013e7d5a11",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "de003981e262edd1"
+            ]
+        ]
+    },
+    {
+        "id": "de003981e262edd1",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 2",
+        "func": "// Check if msg.payload is an object\nif (typeof msg.payload === \"object\" && msg.payload !== null) {\n    // Prepare the SQL query\n    msg.topic = \"INSERT INTO lightsensor (light_level) VALUES (\" + msg.payload.light_level + \")\";\n\n} else {\n    node.error(\"Payload is not a valid object\", msg);\n    return null; // Stop execution if payload is not valid\n}\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 140,
+        "wires": [
+            [
+                "c9b1486a03861251"
+            ]
+        ]
+    },
+    {
+        "id": "c9b1486a03861251",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 790,
+        "y": 140,
+        "wires": [
+            [
+                "7afa4f2783fb660f"
+            ]
+        ]
+    },
+    {
+        "id": "7afa4f2783fb660f",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "33c5108c063e1a0f",
+        "type": "ui_slider",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "label": "Température Max",
+        "tooltip": "",
+        "group": "5e4eba4267e9cd64",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 150,
+        "y": 560,
+        "wires": [
+            [
+                "2e79fcbd5c06a879"
+            ]
+        ]
+    },
+    {
+        "id": "2e79fcbd5c06a879",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 4",
+        "func": "msg.payload = \"temperature\"+msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 560,
+        "wires": [
+            [
+                "7e89ec7fb2270fe1"
+            ]
+        ]
+    },
+    {
+        "id": "27519ffcde236ab8",
+        "type": "ui_chart",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Luminosité (lux)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 840,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1bd568c942608a28",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 7",
+        "func": "msg.topic = 'SELECT * FROM lightsensor';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 700,
+        "wires": [
+            [
+                "655042c68a5e7ec0"
+            ]
+        ]
+    },
+    {
+        "id": "bb1ac6a9c8629a70",
+        "type": "inject",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 700,
+        "wires": [
+            [
+                "1bd568c942608a28"
+            ]
+        ]
+    },
+    {
+        "id": "655042c68a5e7ec0",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 470,
+        "y": 700,
+        "wires": [
+            [
+                "b3b860b35632c456"
+            ]
+        ]
+    },
+    {
+        "id": "b3b860b35632c456",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "conversion",
+        "func": "const pay = msg.payload;\n\n//Creation de l'object selon la norme de la chart\nvar obj = [{\n    series: [\"Luminosite\"],\n    data: [[]],\n    lables: [\"\"]\n}]\n\n//Mets les valeurs dans l'objects\n\nfor(let item of pay){\n    obj[0].data[0].push({\n        x:item.timestamp,\n        y:item.light_level\n    })\n}\n\nmsg.payload=obj;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 700,
+        "wires": [
+            [
+                "27519ffcde236ab8"
+            ]
+        ]
+    },
+    {
+        "id": "d6f35928677a4555",
+        "type": "ui_chart",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature (°C)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 850,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2fc76c3ce3da8d08",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 14",
+        "func": "msg.topic = 'SELECT * FROM capteur_temperature';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 820,
+        "wires": [
+            [
+                "450fbba2ce6e7217"
+            ]
+        ]
+    },
+    {
+        "id": "f3b1a9787021a58b",
+        "type": "inject",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 820,
+        "wires": [
+            [
+                "2fc76c3ce3da8d08"
+            ]
+        ]
+    },
+    {
+        "id": "450fbba2ce6e7217",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 470,
+        "y": 820,
+        "wires": [
+            [
+                "f312b85e4e7c294c"
+            ]
+        ]
+    },
+    {
+        "id": "f312b85e4e7c294c",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "conversion",
+        "func": "const pay = msg.payload;\n\n//Creation de l'object selon la norme de la chart\nvar obj = [{\n    series: [\"Temperature\"],\n    data: [[]],\n    lables: [\"\"]\n}]\n\n//Mets les valeurs dans l'objects\n\nfor(let item of pay){\n    obj[0].data[0].push({\n        x:item.timestamp,\n        y:item.value\n    })\n}\n\nmsg.payload=obj;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 820,
+        "wires": [
+            [
+                "d6f35928677a4555"
+            ]
+        ]
+    },
+    {
+        "id": "cdde90108510c2a2",
+        "type": "ui_chart",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity (%)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 830,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4955d70a537d153a",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 15",
+        "func": "msg.topic = 'SELECT * FROM capteur_humidite';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 940,
+        "wires": [
+            [
+                "d195019cadc063ce"
+            ]
+        ]
+    },
+    {
+        "id": "f37e68daa3f20147",
+        "type": "inject",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 940,
+        "wires": [
+            [
+                "4955d70a537d153a"
+            ]
+        ]
+    },
+    {
+        "id": "d195019cadc063ce",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 470,
+        "y": 940,
+        "wires": [
+            [
+                "39ef0734d57e8783"
+            ]
+        ]
+    },
+    {
+        "id": "39ef0734d57e8783",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "conversion",
+        "func": "const pay = msg.payload;\n\n//Creation de l'object selon la norme de la chart\nvar obj = [{\n    series: [\"Humidite\"],\n    data: [[]],\n    lables: [\"\"]\n}]\n\n//Mets les valeurs dans l'objects\n\nfor(let item of pay){\n    obj[0].data[0].push({\n        x:item.timestamp,\n        y:item.value\n    })\n}\n\nmsg.payload=obj;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 940,
+        "wires": [
+            [
+                "cdde90108510c2a2"
+            ]
+        ]
+    },
+    {
+        "id": "f86fe53c8ca339b5",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reinitialiser data lumiere",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 760,
+        "wires": [
+            [
+                "1feefe44f221e1db"
+            ]
+        ]
+    },
+    {
+        "id": "1feefe44f221e1db",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 16",
+        "func": "msg.topic = 'DELETE FROM lightsensor';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 760,
+        "wires": [
+            [
+                "b77b093f224a77be"
+            ]
+        ]
+    },
+    {
+        "id": "b77b093f224a77be",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 570,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "467601051ca58ef3",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reinitialiser data temperature",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 140,
+        "y": 880,
+        "wires": [
+            [
+                "8d888db021f212c9"
+            ]
+        ]
+    },
+    {
+        "id": "8d888db021f212c9",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 17",
+        "func": "msg.topic = 'DELETE FROM capteur_temperature';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 880,
+        "wires": [
+            [
+                "ac4a0073e77ac486"
+            ]
+        ]
+    },
+    {
+        "id": "ac4a0073e77ac486",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 570,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9a4df7bec8432d4d",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "94d5e6736ae39147",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reinitialiser data humidite",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 150,
+        "y": 1000,
+        "wires": [
+            [
+                "f537f6f984db620c"
+            ]
+        ]
+    },
+    {
+        "id": "f537f6f984db620c",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 18",
+        "func": "msg.topic = 'DELETE FROM capteur_humidite';\nmsg.payload = { name: '' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1000,
+        "wires": [
+            [
+                "7ebe1b428111c857"
+            ]
+        ]
+    },
+    {
+        "id": "7ebe1b428111c857",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 590,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0b70c8a30d9bb993",
+        "type": "ui_switch",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "label": "Auto (faux) / Manuel (vrai)",
+        "tooltip": "",
+        "group": "edb6307ecd488387",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 270,
+        "y": 1180,
+        "wires": [
+            [
+                "e40139b12c93fed5",
+                "01e02ba3cfca5a17"
+            ]
+        ]
+    },
+    {
+        "id": "807467eefaad1adf",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "a799412c4e5281c8",
+        "order": 7,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": ">",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "right",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 330,
+        "y": 1320,
+        "wires": [
+            [
+                "51d7d2e13e5d6a0f"
+            ]
+        ]
+    },
+    {
+        "id": "b7db8810f992e26a",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "a799412c4e5281c8",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": "<",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "left",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 210,
+        "y": 1360,
+        "wires": [
+            [
+                "51d7d2e13e5d6a0f"
+            ]
+        ]
+    },
+    {
+        "id": "a4c1892384b39ece",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "a799412c4e5281c8",
+        "order": 9,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": "↓",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "down",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 270,
+        "y": 1420,
+        "wires": [
+            [
+                "51d7d2e13e5d6a0f"
+            ]
+        ]
+    },
+    {
+        "id": "33d637825f6b29a3",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "a799412c4e5281c8",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": " ↑",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "up",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 270,
+        "y": 1260,
+        "wires": [
+            [
+                "51d7d2e13e5d6a0f"
+            ]
+        ]
+    },
+    {
+        "id": "51d7d2e13e5d6a0f",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 19",
+        "func": "var Etat = msg.payload;\n\nif (Etat == \"right\"){\n    var msg1 = {payload:\"motor_right\"};\n    return [msg1]\n}\nelse if(Etat == \"left\"){\n    var msg1 = { payload: \"motor_left\" };\n    return [msg1]\n}\nelse if(Etat == \"up\"){\n    var msg1 = { payload: \"motor_up\" };\n    return [msg1]\n}\nelse if (Etat == \"down\") {\n    var msg1 = { payload: \"motor_down\" };\n    return [msg1]\n}\nelse if (Etat == \"ini\") {\n    var msg1 = { payload: \"motor_ini\" };\n    return [msg1]\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1320,
+        "wires": [
+            [
+                "cba3736c8f086017",
+                "b05dcaf4f693ce53"
+            ]
+        ]
+    },
+    {
+        "id": "cba3736c8f086017",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 750,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "b7e466c45e623dde",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 930,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "e56a87d573bb9f32",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "12c0d4c4d57cd4bf",
+        "type": "ui_ui_control",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "events": "all",
+        "x": 980,
+        "y": 1180,
+        "wires": [
+            [
+                "e56a87d573bb9f32"
+            ]
+        ]
+    },
+    {
+        "id": "e40139b12c93fed5",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 20",
+        "func": "if (msg.payload == true){\n    msg.payload = {\n    group: {\n        show: ['TABManuel_Moteur', 'TABManuel_Actionneur']\n    }}\n}\nelse if (msg.payload == false){\n    msg.payload = {\n    group: {\n        hide: ['TABManuel_Moteur', 'TABManuel_Actionneur']\n    }}\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 1120,
+        "wires": [
+            [
+                "12c0d4c4d57cd4bf",
+                "b7e466c45e623dde"
+            ]
+        ]
+    },
+    {
+        "id": "4562dc44ccc20acc",
+        "type": "ui_switch",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "label": "Activer le ventilateur",
+        "tooltip": "",
+        "group": "7476e9035d84c6db",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 260,
+        "y": 1580,
+        "wires": [
+            [
+                "c9875514f3ea7ab5"
+            ]
+        ]
+    },
+    {
+        "id": "c9875514f3ea7ab5",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 21",
+        "func": "if (msg.payload == true){\n    msg.payload = \"ventilateur_on\";\n}\nelse if (msg.payload == false){\n    msg.payload = \"ventilateur_off\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 1580,
+        "wires": [
+            [
+                "1f860e32a5a7d6ad",
+                "b05dcaf4f693ce53"
+            ]
+        ]
+    },
+    {
+        "id": "1f860e32a5a7d6ad",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 770,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "b05dcaf4f693ce53",
+        "type": "mqtt out",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "esp32/Giraux",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5ba725013e7d5a11",
+        "x": 1050,
+        "y": 1520,
+        "wires": []
+    },
+    {
+        "id": "01e02ba3cfca5a17",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 22",
+        "func": "if (msg.payload == true){\n    var msg1 = {payload:\"manuel_on\"};\n    return [msg1]\n}\nelse if (msg.payload == false){\n    var msg1 = {payload:\"manuel_off\"};\n    return [msg1]\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 1220,
+        "wires": [
+            [
+                "b05dcaf4f693ce53"
+            ]
+        ]
+    },
+    {
+        "id": "2dd0c6d5b811ccf1",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "a799412c4e5281c8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "retour position initiale",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ini",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 340,
+        "y": 1500,
+        "wires": [
+            [
+                "51d7d2e13e5d6a0f"
+            ]
+        ]
+    },
+    {
+        "id": "f2402851b23f1757",
+        "type": "mqtt in",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "giraux/temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5ba725013e7d5a11",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "d008a0e03a31ba9a"
+            ]
+        ]
+    },
+    {
+        "id": "d008a0e03a31ba9a",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 23",
+        "func": "// Check if msg.payload is an object\nif (typeof msg.payload === \"object\" && msg.payload !== null) {\n    // Prepare the SQL query\n    msg.topic = \"INSERT INTO capteur_temperature (value) VALUES (\" + msg.payload.value + \")\";\n\n} else {\n    node.error(\"Payload is not a valid object\", msg);\n    return null; // Stop execution if payload is not valid\n}\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 220,
+        "wires": [
+            [
+                "e134caea4be1be68"
+            ]
+        ]
+    },
+    {
+        "id": "e134caea4be1be68",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 830,
+        "y": 220,
+        "wires": [
+            [
+                "6d4abce5e7861d5c"
+            ]
+        ]
+    },
+    {
+        "id": "6d4abce5e7861d5c",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "02f9d5b29881a14a",
+        "type": "mqtt in",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "giraux/systeme",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5ba725013e7d5a11",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "5c1fc17fbe5b8258",
+                "bf4cdc10e2a28dee",
+                "6205a87dbf043f7e"
+            ]
+        ]
+    },
+    {
+        "id": "5d6c77dac3a1db4f",
+        "type": "mqtt out",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "esp32/Giraux",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5ba725013e7d5a11",
+        "x": 650,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "5c1fc17fbe5b8258",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 790,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4b8a0cde2b8f1ced",
+        "type": "mqtt in",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "giraux/humidite",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5ba725013e7d5a11",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "f0e1fab311f450ac"
+            ]
+        ]
+    },
+    {
+        "id": "f0e1fab311f450ac",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 24",
+        "func": "// Check if msg.payload is an object\nif (typeof msg.payload === \"object\" && msg.payload !== null) {\n    // Prepare the SQL query\n    msg.topic = \"INSERT INTO capteur_humidite (value) VALUES (\" + msg.payload.value + \")\";\n\n} else {\n    node.error(\"Payload is not a valid object\", msg);\n    return null; // Stop execution if payload is not valid\n}\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 300,
+        "wires": [
+            [
+                "27adc25a33c311b8"
+            ]
+        ]
+    },
+    {
+        "id": "27adc25a33c311b8",
+        "type": "Stackhero-MySQL",
+        "z": "39309c3317489aa5",
+        "server": "dd7c9702c7fc802c",
+        "name": "",
+        "x": 830,
+        "y": 300,
+        "wires": [
+            [
+                "ab10341de5562b40"
+            ]
+        ]
+    },
+    {
+        "id": "ab10341de5562b40",
+        "type": "debug",
+        "z": "39309c3317489aa5",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "794dfb62fa76ab60",
+        "type": "ui_gauge",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "904cdb1d982d3aa7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Systeme Statue (ON/OFF)",
+        "label": "",
+        "format": "",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#ff0000",
+            "#e6e600",
+            "#2af901"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 960,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "bf4cdc10e2a28dee",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 25",
+        "func": "if(msg.payload == \"systeme_ON\"){\n    msg.payload=1;\n}\nelse if(msg.payload==\"systeme_OFF\"){\n    msg.payload=0;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 500,
+        "wires": [
+            [
+                "794dfb62fa76ab60"
+            ]
+        ]
+    },
+    {
+        "id": "7b134f1eae0283f9",
+        "type": "ui_switch",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "label": "Systeme (ON/OFF)",
+        "tooltip": "",
+        "group": "904cdb1d982d3aa7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 330,
+        "y": 480,
+        "wires": [
+            [
+                "fe14e844e831626f"
+            ]
+        ]
+    },
+    {
+        "id": "fe14e844e831626f",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 26",
+        "func": "if (msg.payload == true){\n    msg.payload = \"systeme_ON\"\n}\nelse if (msg.payload == false){\n    msg.payload = \"systeme_OFF\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 480,
+        "wires": [
+            [
+                "5d6c77dac3a1db4f",
+                "bf4cdc10e2a28dee"
+            ]
+        ]
+    },
+    {
+        "id": "7e89ec7fb2270fe1",
+        "type": "mqtt out",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "topic": "esp32/Giraux",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5ba725013e7d5a11",
+        "x": 670,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "6205a87dbf043f7e",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 27",
+        "func": "if(msg.payload == \"systeme_ON\"){\n    let retour = true;\n    msg.payload=retour;\n}\nelse if(msg.payload==\"systeme_OFF\"){\n    let retour = false;\n    msg.payload=retour;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 130,
+        "y": 460,
+        "wires": [
+            [
+                "7b134f1eae0283f9"
+            ]
+        ]
+    },
+    {
+        "id": "8f06a1dc7646d3b8",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 28",
+        "func": "if (msg.payload == true){\n    msg.payload = \"buzzer_on\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1720,
+        "wires": [
+            [
+                "b05dcaf4f693ce53"
+            ]
+        ]
+    },
+    {
+        "id": "11084c94619ead47",
+        "type": "ui_button",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "group": "7476e9035d84c6db",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Buzzer",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 220,
+        "y": 1700,
+        "wires": [
+            [
+                "8f06a1dc7646d3b8"
+            ]
+        ]
+    },
+    {
+        "id": "8361e0fc3c10022c",
+        "type": "ui_slider",
+        "z": "39309c3317489aa5",
+        "name": "",
+        "label": "Seuil lumière panneau",
+        "tooltip": "",
+        "group": "5e4eba4267e9cd64",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "200",
+        "max": "6000",
+        "step": "10",
+        "className": "",
+        "x": 160,
+        "y": 620,
+        "wires": [
+            [
+                "4e7166eb0e48fcd6"
+            ]
+        ]
+    },
+    {
+        "id": "4e7166eb0e48fcd6",
+        "type": "function",
+        "z": "39309c3317489aa5",
+        "name": "function 29",
+        "func": "msg.payload = \"panneau\"+msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 620,
+        "wires": [
+            [
+                "7e89ec7fb2270fe1"
+            ]
+        ]
+    },
+    {
+        "id": "0fbb5cd207473004",
+        "type": "ui_spacer",
+        "z": "39309c3317489aa5",
+        "name": "spacer",
+        "group": "a799412c4e5281c8",
+        "order": 3,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "28978d4fa2e98e3a",
+        "type": "ui_spacer",
+        "z": "39309c3317489aa5",
+        "name": "spacer",
+        "group": "a799412c4e5281c8",
+        "order": 5,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "9aa6887ab4b3dd95",
+        "type": "ui_spacer",
+        "z": "39309c3317489aa5",
+        "name": "spacer",
+        "group": "a799412c4e5281c8",
+        "order": 8,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "226627df8b35b478",
+        "type": "ui_spacer",
+        "z": "39309c3317489aa5",
+        "name": "spacer",
+        "group": "a799412c4e5281c8",
+        "order": 10,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "5ba725013e7d5a11",
+        "type": "mqtt-broker",
+        "name": "utbm",
+        "broker": "mqtt.ci-ciad.utbm.fr",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "dd7c9702c7fc802c",
+        "type": "Stackhero-MySQL-Server",
+        "name": "IF3B_Data",
+        "host": "localhost",
+        "port": "3306",
+        "tls": false,
+        "database": "if3b"
+    },
+    {
+        "id": "5e4eba4267e9cd64",
+        "type": "ui_group",
+        "name": "Reglage des limites",
+        "tab": "3ab0e3d319fb833c",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "94d5e6736ae39147",
+        "type": "ui_group",
+        "name": "Graph",
+        "tab": "3ab0e3d319fb833c",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "edb6307ecd488387",
+        "type": "ui_group",
+        "name": "Manuel",
+        "tab": "7de0de4ef2f23d94",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a799412c4e5281c8",
+        "type": "ui_group",
+        "name": "Moteur",
+        "tab": "7de0de4ef2f23d94",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "7476e9035d84c6db",
+        "type": "ui_group",
+        "name": "Actionneur",
+        "tab": "7de0de4ef2f23d94",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "904cdb1d982d3aa7",
+        "type": "ui_group",
+        "name": "Switch",
+        "tab": "3ab0e3d319fb833c",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3ab0e3d319fb833c",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "7de0de4ef2f23d94",
+        "type": "ui_tab",
+        "name": "TABManuel",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
