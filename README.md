@@ -11,7 +11,7 @@ Le système ajuste l’orientation et surveille les conditions environnementales
 - Arduino (C/C++)
 - Capteurs (température / luminosité)
 - Impression 3D
-- Node-RED (si utilisé)
+- Node-RED 
 
 ---
 
